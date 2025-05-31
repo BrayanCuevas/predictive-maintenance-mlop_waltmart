@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  predictive-maintenance-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: predictive-maintenance
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=models/baseline_model.joblib
+      - PORT=8000
+      - HOST=0.0.0.0
+    volumes:
+      # Mount models directory to persist trained models
+      - ./models:/app/models:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Training service
+  model-trainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: predictive-maintenance-trainer
+    command: ["python", "scripts/train_pipeline.py"]
+    volumes:
+      - ./data:/app/data:ro
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - PYTHONPATH=/app
+    profiles:
+      - training

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Maintenance Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .metric-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .metric-unit {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .status-healthy {
+            color: #27ae60;
+        }
+        
+        .status-warning {
+            color: #f39c12;
+        }
+        
+        .predictions-table {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .refresh-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>🔧 Predictive Maintenance Dashboard</h1>
+            <p>Real-time monitoring of ML API performance</p>
+            <button class="refresh-btn" onclick="refreshMetrics()">🔄 Refresh Metrics</button>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">API Status</div>
+                <div class="metric-value status-healthy" id="api-status">Healthy</div>
+                <div class="metric-unit">Service operational</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Total Predictions</div>
+                <div class="metric-value" id="total-predictions">0</div>
+                <div class="metric-unit">requests processed</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Uptime</div>
+                <div class="metric-value" id="uptime">0</div>
+                <div class="metric-unit">seconds</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">CPU Usage</div>
+                <div class="metric-value" id="cpu-usage">0</div>
+                <div class="metric-unit">percent</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Memory Usage</div>
+                <div class="metric-value" id="memory-usage">0</div>
+                <div class="metric-unit">percent</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Model AUC</div>
+                <div class="metric-value status-healthy" id="model-auc">0.784</div>
+                <div class="metric-unit">accuracy score</div>
+            </div>
+        </div>
+        
+        <div class="predictions-table">
+            <h3>📊 Recent Activity</h3>
+            <div id="activity-log">
+                <p>No recent predictions...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let predictionCount = 0;
+        let activityLog = [];
+        
+        async function refreshMetrics() {
+            try {
+                const response = await fetch('http://localhost:8000/metrics/summary');
+                const data = await response.json();
+                
+                // Update metrics
+                document.getElementById('api-status').textContent = data.status;
+                document.getElementById('total-predictions').textContent = data.metrics.total_predictions;
+                document.getElementById('uptime').textContent = Math.round(data.metrics.uptime_seconds);
+                document.getElementById('cpu-usage').textContent = data.metrics.cpu_usage.toFixed(1);
+                document.getElementById('memory-usage').textContent = data.metrics.memory_usage.toFixed(1);
+                
+                if (data.model_info) {
+                    document.getElementById('model-auc').textContent = data.model_info.auc_score.toFixed(3);
+                }
+                
+                // Update status color
+                const statusElement = document.getElementById('api-status');
+                if (data.status === 'healthy') {
+                    statusElement.className = 'metric-value status-healthy';
+                } else {
+                    statusElement.className = 'metric-value status-warning';
+                }
+                
+                console.log('Metrics updated:', new Date().toLocaleTimeString());
+                
+            } catch (error) {
+                console.error('Error fetching metrics:', error);
+                document.getElementById('api-status').textContent = 'Error';
+                document.getElementById('api-status').className = 'metric-value status-warning';
+            }
+        }
+        
+        function makePrediction() {
+            const testData = {
+                machineID: Math.floor(Math.random() * 10) + 1,
+                volt: 150 + (Math.random() - 0.5) * 20,
+                rotate: 480 + (Math.random() - 0.5) * 40,
+                pressure: 95 + (Math.random() - 0.5) * 10,
+                vibration: 40 + (Math.random() - 0.5) * 16
+            };
+            
+            fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(testData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                predictionCount++;
+                const logEntry = `[${new Date().toLocaleTimeString()}] Machine ${data.machineID}: ${(data.failure_probability * 100).toFixed(1)}% risk (${data.risk_level})`;
+                activityLog.unshift(logEntry);
+                
+                if (activityLog.length > 10) {
+                    activityLog = activityLog.slice(0, 10);
+                }
+                
+                document.getElementById('activity-log').innerHTML = 
+                    activityLog.map(log => `<p>${log}</p>`).join('');
+                
+                // Auto refresh metrics
+                setTimeout(refreshMetrics, 500);
+            })
+            .catch(error => console.error('Error making prediction:', error));
+        }
+        
+        // Initialize dashboard
+        refreshMetrics();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(refreshMetrics, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "v1.0.20250531_020352": {
+    "version": "v1.0.20250531_020352",
+    "model_name": "Random Forest",
+    "algorithm": "Random Forest",
+    "auc_score": 0.7844690520950787,
+    "precision": 0.24501436362879386,
+    "recall": 0.633817985998923,
+    "training_date": "2025-05-31T02:03:52.150109",
+    "training_samples": 0,
+    "feature_count": 36,
+    "file_path": "models/registry/models/model_v1.0.20250531_020352.joblib",
+    "status": "active",
+    "deployment_date": "2025-05-31T02:03:52.150693",
+    "notes": "Automated training run with 36 features"
+  }
+}
