@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.pytest_cache
+venv/
+env/
+.venv
+
+# Jupyter
+.ipynb_checkpoints
+
+# Data files (too large for container)
+data/raw/*.csv
+data/processed/*.parquet
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+test_*.py
+*_test.py
+
+# Documentation
+docs/
+reports/
+README.md
+
+# Deployment
+deploy/

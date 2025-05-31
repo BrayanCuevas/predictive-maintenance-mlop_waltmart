@@ -12,6 +12,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import argparse
+from typing import Dict, List
 
 # Add src to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
@@ -65,6 +66,7 @@ def validate_environment():
     
     # Create output directories
     Path("models").mkdir(exist_ok=True)
+    Path("models/registry").mkdir(exist_ok=True)
     Path("logs").mkdir(exist_ok=True)
     
     logger.info("Environment validation completed successfully")
@@ -138,13 +140,69 @@ def train_and_evaluate_model(processed_df, feature_names, model_output_path: str
     return evaluation
 
 
-def generate_summary_report(evaluation, feature_names, output_path: str = "reports/training_summary.txt"):
+def register_trained_model(evaluation: Dict, feature_names: List[str], 
+                          model_path: str, version: str = None) -> str:
+    """Register newly trained model in registry."""
+    from src.models.model_registry import model_registry
+    
+    logger = logging.getLogger(__name__)
+    
+    if version is None:
+        # Auto-generate version based on timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        version = f"v1.0.{timestamp}"
+    
+    logger.info(f"Registering model as version {version}...")
+    
+    training_metadata = {
+        'feature_count': len(feature_names),
+        'training_samples': evaluation.get('metadata', {}).get('training_samples', 0),
+        'test_samples': evaluation.get('metadata', {}).get('test_samples', 0)
+    }
+    
+    success = model_registry.register_model(
+        model_path=model_path,
+        version=version,
+        evaluation_results=evaluation,
+        training_metadata=training_metadata,
+        notes=f"Automated training run with {len(feature_names)} features"
+    )
+    
+    if success:
+        logger.info(f"Model registered as {version}")
+        
+        # Auto-evaluate for promotion
+        logger.info("Evaluating model for automatic promotion...")
+        promoted = model_registry.auto_evaluate_and_promote(
+            min_auc_threshold=0.75,
+            min_improvement=0.005
+        )
+        
+        if promoted:
+            logger.info(f"Model {promoted} automatically promoted to active")
+        else:
+            logger.info("Model registered as candidate, manual review recommended")
+        
+        # Show registry summary
+        summary = model_registry.get_registry_summary()
+        logger.info(f"Registry Summary:")
+        logger.info(f"  Total models: {summary['total_models']}")
+        logger.info(f"  Active models: {summary['active_models']}")
+        logger.info(f"  Candidate models: {summary['candidate_models']}")
+        logger.info(f"  Best AUC: {summary['best_auc']:.4f}")
+    
+    return version
+
+
+def generate_summary_report(evaluation, feature_names, model_version: str = None, 
+                          output_path: str = "reports/training_summary.txt"):
     """
     Generate a summary report of the training results.
     
     Args:
         evaluation: Model evaluation results
         feature_names: List of feature names
+        model_version: Version of registered model
         output_path: Path to save the report
     """
     logger = logging.getLogger(__name__)
@@ -160,6 +218,7 @@ PREDICTIVE MAINTENANCE MODEL TRAINING SUMMARY
 
 Training Date: {timestamp}
 Author: Brayan Cuevas
+Model Version: {model_version or 'Not versioned'}
 
 MODEL CONFIGURATION
 ------------------
@@ -189,17 +248,18 @@ BUSINESS IMPACT
 - {evaluation['business_metrics']['precision']*100:.1f}% of predictions are correct
 - {evaluation['business_metrics']['false_alarm_rate']*100:.1f}% false alarm rate
 
+MODEL REGISTRY
+--------------
+- Version: {model_version or 'Not registered'}
+- Registry Status: Available for deployment
+- Auto-promotion: Based on performance thresholds
+
 DELIVERABLES
 -----------
-✓ Trained model: models/baseline_model.joblib
-✓ Training logs: logs/training_[timestamp].log
-✓ Summary report: {output_path}
-
-NEXT STEPS
-----------
-1. Deploy model via API
-2. Implement monitoring
-3. Schedule periodic retraining
+Trained model: models/baseline_model.joblib
+Versioned model: models/registry/models/model_{model_version or 'unknown'}.joblib
+Training logs: logs/training_[timestamp].log
+Summary report: {output_path}
 """
 
     # Save report
@@ -218,6 +278,10 @@ def main():
                        help="Days ahead to predict failures (default: 3)")
     parser.add_argument("--model-output", type=str, default="models/baseline_model.joblib",
                        help="Path to save trained model")
+    parser.add_argument("--version", type=str, default=None,
+                       help="Model version (auto-generated if not provided)")
+    parser.add_argument("--register", action="store_true", default=True,
+                       help="Register model in registry (default: True)")
     parser.add_argument("--log-level", type=str, default="INFO",
                        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
                        help="Logging level")
@@ -241,14 +305,23 @@ def main():
         # Train and evaluate model
         evaluation = train_and_evaluate_model(processed_df, feature_names, args.model_output)
         
+        # Register model in registry
+        model_version = None
+        if args.register:
+            model_version = register_trained_model(
+                evaluation, feature_names, args.model_output, args.version
+            )
+        
         # Generate summary report
-        report_path = generate_summary_report(evaluation, feature_names)
+        report_path = generate_summary_report(evaluation, feature_names, model_version)
         
         logger.info("="*60)
         logger.info("TRAINING PIPELINE COMPLETED SUCCESSFULLY!")
         logger.info("="*60)
         logger.info(f"Model AUC: {evaluation['auc_score']:.4f}")
         logger.info(f"Model saved: {args.model_output}")
+        if model_version:
+            logger.info(f"Model version: {model_version}")
         logger.info(f"Report saved: {report_path}")
         
         return 0
