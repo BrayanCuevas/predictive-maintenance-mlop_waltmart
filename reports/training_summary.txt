@@ -1,0 +1,46 @@
+
+PREDICTIVE MAINTENANCE MODEL TRAINING SUMMARY
+============================================
+
+Training Date: 2025-05-30 23:55:39
+Author: Brayan Cuevas
+
+MODEL CONFIGURATION
+------------------
+Algorithm: Random Forest Classifier
+Features: 36 engineered features
+Prediction Window: 3 days ahead
+Train/Test Split: Temporal (80/20)
+
+PERFORMANCE METRICS
+------------------
+AUC Score: 0.7845
+Precision: 0.245
+Recall: 0.634
+False Alarm Rate: 0.109
+Miss Rate: 0.366
+
+CONFUSION MATRIX
+---------------
+True Negatives: 147,801
+False Positives: 18,134
+False Negatives: 3,400
+True Positives: 5,885
+
+BUSINESS IMPACT
+--------------
+- Model detects 63.4% of actual failures
+- 24.5% of predictions are correct
+- 10.9% false alarm rate
+
+DELIVERABLES
+-----------
+✓ Trained model: models/baseline_model.joblib
+✓ Training logs: logs/training_[timestamp].log
+✓ Summary report: reports/training_summary.txt
+
+NEXT STEPS
+----------
+1. Deploy model via API
+2. Implement monitoring
+3. Schedule periodic retraining
