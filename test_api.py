@@ -59,18 +59,18 @@ def test_api():
         
         if response.status_code == 200:
             model_info = response.json()
-            print(f"✓ Model info retrieved")
+            print(f"  Model info retrieved")
             print(f"  Model: {model_info['model_info']['model_name']}")
             print(f"  AUC: {model_info['model_info']['auc_score']}")
         
-        print(f"\n🎉 API testing completed successfully!")
-        print(f"📖 View documentation at: {BASE_URL}/docs")
+        print(f"API testing completed successfully!")
+        print(f"View documentation at: {BASE_URL}/docs")
         
     except requests.exceptions.ConnectionError:
-        print("✗ Could not connect to API")
+        print(" Could not connect to API")
         print("  Make sure the API is running on http://localhost:8000")
     except Exception as e:
-        print(f"✗ Test failed: {e}")
+        print(f" Test failed: {e}")
 
 if __name__ == "__main__":
     test_api()

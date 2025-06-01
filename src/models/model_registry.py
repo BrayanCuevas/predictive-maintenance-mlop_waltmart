@@ -251,12 +251,12 @@ class ModelRegistry:
         best_candidate = self.get_best_candidate()
         
         if not best_candidate:
-            print("ℹ No candidate models available")
+            print("No candidate models available")
             return None
         
         # Check minimum threshold
         if best_candidate.auc_score < min_auc_threshold:
-            print(f"✗ Candidate AUC {best_candidate.auc_score:.3f} below threshold {min_auc_threshold}")
+            print(f"Candidate AUC {best_candidate.auc_score:.3f} below threshold {min_auc_threshold}")
             return None
         
         # Compare with active model
@@ -264,10 +264,10 @@ class ModelRegistry:
             improvement = best_candidate.auc_score - current_active.auc_score
             
             if improvement < min_improvement:
-                print(f"✗ Improvement {improvement:.3f} below threshold {min_improvement}")
+                print(f"Improvement {improvement:.3f} below threshold {min_improvement}")
                 return None
             
-            print(f"✓ Candidate shows {improvement:.3f} AUC improvement")
+            print(f"Candidate shows {improvement:.3f} AUC improvement")
         
         # Promote the candidate
         if self.promote_model(best_candidate.version):

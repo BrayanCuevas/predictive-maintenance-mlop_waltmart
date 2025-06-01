@@ -90,9 +90,9 @@ class MaintenanceDataLoader:
         telemetry_df, failures_df = self.load_datasets()
         validation_results = self.validate_data(telemetry_df, failures_df)
 
-        print(f"✓ Loaded {validation_results['telemetry_shape'][0]:,} telemetry records")
-        print(f"✓ Loaded {validation_results['total_failures']} failure events")
-        print(f"✓ Monitoring {validation_results['unique_machines']} machines")
+        print(f"Loaded {validation_results['telemetry_shape'][0]:,} telemetry records")
+        print(f"Loaded {validation_results['total_failures']} failure events")
+        print(f"Monitoring {validation_results['unique_machines']} machines")
 
         return telemetry_df, failures_df, validation_results
 
