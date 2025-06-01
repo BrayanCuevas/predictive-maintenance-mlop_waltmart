@@ -40,8 +40,8 @@ This repository implements an MLOps solution for predicting machine failures usi
 - ✅ **Production Deployment**: Containerized API with health checks and monitoring
 - ✅ **Cloud Architecture**: Vertex AI components with local validation
 - ✅ **Engineering Practices**: Automated testing, CI/CD, and documentation
+- ✅ **Model Management**: Automated versioning, performance tracking, rollback capability
 - ✅ **Technical Analysis**: Model performance and system design (see `docs/technical_report.md`)
-
 **Quick Review Guide**: Check diagrams below → Run `make pipeline` → Review `docs/` for detailed analysis
 
 ## System Architecture
@@ -87,7 +87,7 @@ graph TD
     style J fill:#e8f0ff
 ```
 
-![Image 1: MLOps Pipeline Dashboard Screenshot](docs/images/mlops-dashboard.png)
+![Image 1: MLOps Pipeline Dashboard Screenshot](images/Dashboard_MLOps.png)
 *Real-time monitoring dashboard showing model performance, API metrics, and system health indicators*
 
 ## Reproducibility - Quick Start
@@ -150,62 +150,69 @@ predictive-maintenance-mlop_waltmart/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                 # CI/CD pipeline configuration
+│
 ├── data/
 │   ├── raw/                       # Original datasets
-│   │   ├── PdM_telemetry.csv     # Sensor readings (876K records)
-│   │   └── PdM_failures.csv      # Failure events (761 records)
-│   ├── processed/                 # Engineered features
-│   └── interim/                   # Intermediate processing files
+│       ├── PdM_telemetry.csv     # Sensor readings (876K records)
+│       └── PdM_failures.csv      # Failure events (761 records)
+│   
 ├── docs/
 │   ├── technical_design.pdf       # System architecture document
 │   ├── technical_report.pdf       # Model performance analysis
 │   ├── deployment_guide.pdf       # Production deployment guide
-│   └── images/                    # Documentation assets
-│       └── mlops-dashboard.png
+│   
+│       
 ├── models/
 │   ├── baseline_model.joblib      # Trained Random Forest model
 │   ├── model_registry.json       # Model version tracking
 │   └── model_metadata.json       # Performance metrics
+│
 ├── monitoring/
 │   ├── dashboard.html             # Grafana dashboard config
 │   ├── prometheus.yml             # Metrics collection config
 │   └── alerts.yml                 # Alert configurations
+│
 ├── notebooks/
 │   ├── 01_baseline_predictive_maintenance.ipynb  # Model development
 │   └── 01_exploratory_data_analysis.ipynb        # Data exploration
+│
 ├── scripts/
 │   ├── train_pipeline.py          # Main training orchestration
 │   ├── evaluate_model.py          # Model evaluation utilities
 │   └── data_validation.py         # Data quality checks
+│
 ├── src/
-│   ├── __init__.py
+│   ├ 
 │   ├── api/
-│   │   ├── __init__.py
+│   │   ├
 │   │   ├── main.py                # FastAPI application
 │   │   ├── predictor.py           # Prediction logic
 │   │   ├── schemas.py             # API data models
 │   │   └── metrics.py             # Prometheus metrics
 │   ├── data/
-│   │   ├── __init__.py
+│   │   ├
 │   │   ├── data_loader.py         # Data ingestion
 │   │   └── feature_engineering.py # Feature creation (36 features)
 │   └── models/
-│       ├── __init__.py
+│       ├
 │       ├── trainer.py             # Model training logic
 │       └── model_registry.py      # Version management
+│
 ├── test/
-│   ├── __init__.py
+│   ├─
 │   ├── test_api.py                # API endpoint tests
 │   ├── test_models.py             # Model functionality tests
 │   ├── test_data.py               # Data processing tests
 │   └── test_integration.py        # End-to-end tests
+│
 ├── vertex_ai/
-│   ├── __init__.py
+│   ├
 │   ├── pipeline_definition.py     # Kubeflow pipeline components
 │   ├── deployment_config.py       # Cloud endpoint configuration
 │   ├── monitoring_setup.py        # Data drift detection
 │   ├── local_simulation.py        # Cloud validation script
 │   └── migration_strategy.md      # Implementation roadmap
+│
 ├── .gitignore
 ├── .dockerignore
 ├── Dockerfile                     # Container definition
@@ -309,7 +316,6 @@ make vertex-simulate # Pipeline simulation
 ├── Kubeflow component validation
 ├── Resource requirement estimation  
 ├── Deployment simulation
-└── Cost analysis ($370/month projected)
 ```
 
 **Components Ready for Production**:
@@ -387,18 +393,15 @@ curl http://localhost:8000/metrics/summary
 
 ### Model Improvements
 - Integrate additional data sources (PdM_errors.csv, PdM_machines.csv)
-- Evaluate ensemble methods for improved performance  
-- Implement online learning for model adaptation
+- Model Improvements: XGBoost ensemble with SHAP feature selection: Combine gradient boosting with Random Forest and optimize top 20 features for +5-8% AUC improvement
+- Advanced feature engineering: Lag features, frequency domain analysis, interaction terms
 
 ### Infrastructure Evolution
+- Vertex AI production deployment: Migrate local pipeline to managed cloud environment
 - Deploy Vertex AI pipeline to production
 - Scale to multi-facility deployment
-- Add IoT sensor integration for real-time predictions
+- Model Improvements
 
-### System Integration
-- Connect with existing maintenance systems
-- Add mobile dashboard for technicians
-- Implement root cause analysis features
 
 ## Support & Navigation
 
@@ -427,4 +430,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 **Walmart MLOps Technical Challenge - 2025**  
 *MLOps solution demonstrating production deployment and cloud architecture*
 
-**Contact**: Brayan Cuevas | GitHub: [@BrayanCuevas](https://github.com/BrayanCuevas)
+**Contact**: Brayan Cuevas | ing.brayan.cuevas@gmail.com
