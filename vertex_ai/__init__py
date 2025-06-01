@@ -1,0 +1,27 @@
+"""
+Vertex AI integration for Predictive Maintenance MLOps.
+Cloud-native pipeline implementation using Google Cloud Vertex AI.
+
+Author: Brayan Cuevas
+"""
+
+__version__ = "1.0.0"
+__author__ = "Brayan Cuevas"
+
+# Main pipeline function
+from .pipeline_definition import predictive_maintenance_pipeline, compile_and_run_pipeline
+
+# Deployment utilities  
+from .deployment_config import create_vertex_endpoint, deploy_model_to_endpoint
+
+# Monitoring setup
+from .monitoring_setup import setup_model_monitoring, create_monitoring_dashboard
+
+__all__ = [
+    "predictive_maintenance_pipeline",
+    "compile_and_run_pipeline", 
+    "create_vertex_endpoint",
+    "deploy_model_to_endpoint",
+    "setup_model_monitoring",
+    "create_monitoring_dashboard"
+]
