@@ -13,5 +13,35 @@
     "status": "active",
     "deployment_date": "2025-05-31T02:03:52.150693",
     "notes": "Automated training run with 36 features"
+  },
+  "v1.0.20250601_175841": {
+    "version": "v1.0.20250601_175841",
+    "model_name": "Random Forest",
+    "algorithm": "Random Forest",
+    "auc_score": 0.7844690520950787,
+    "precision": 0.24501436362879386,
+    "recall": 0.633817985998923,
+    "training_date": "2025-06-01T17:58:41.031723",
+    "training_samples": 0,
+    "feature_count": 36,
+    "file_path": "models/registry/models/model_v1.0.20250601_175841.joblib",
+    "status": "candidate",
+    "deployment_date": null,
+    "notes": "Automated training run with 36 features"
+  },
+  "v1.0.20250601_181420": {
+    "version": "v1.0.20250601_181420",
+    "model_name": "Random Forest",
+    "algorithm": "Random Forest",
+    "auc_score": 0.7844690520950787,
+    "precision": 0.24501436362879386,
+    "recall": 0.633817985998923,
+    "training_date": "2025-06-01T18:14:20.509201",
+    "training_samples": 0,
+    "feature_count": 36,
+    "file_path": "models/registry/models/model_v1.0.20250601_181420.joblib",
+    "status": "candidate",
+    "deployment_date": null,
+    "notes": "Automated training run with 36 features"
   }
 }

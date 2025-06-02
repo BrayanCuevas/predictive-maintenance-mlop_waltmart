@@ -28,7 +28,7 @@
 This repository implements an MLOps solution for predicting machine failures using the Microsoft Azure Predictive Maintenance dataset. The implementation focuses on production deployment, automated pipelines, and cloud scalability.
 
 **Key Achievements:**
-- **Model Performance**: AUC 0.784 (solid baseline emphasizing MLOps maturity)
+- **Model Performance**: AUC 0.7943 (solid baseline emphasizing MLOps maturity)
 - **Feature Engineering**: 36 features from rolling window analysis  
 - **Production Deployment**: Containerized API with monitoring
 - **Cloud Migration**: Vertex AI pipeline validated through local simulation
@@ -59,7 +59,7 @@ graph LR
     I --> J[Auto-scaling]
     
     B --> |36 Features| C
-    C --> |AUC: 0.784| D
+    C --> |AUC: 0.7943| D
     E --> |REST API| F
     G --> |Prometheus| K[Grafana Dashboard]
     
@@ -78,7 +78,7 @@ graph TD
     D --> E[36 Features Created<br/>3h + 24h windows]
     E --> F[Temporal Split<br/>80/20]
     F --> G[Model Training<br/>Random Forest]
-    G --> H[Model Evaluation<br/>AUC: 0.784]
+    G --> H[Model Evaluation<br/>AUC: 0.7943]
     H --> I[Model Registry<br/>Version Control]
     I --> J[Production API<br/>FastAPI + Docker]
     
@@ -88,6 +88,7 @@ graph TD
 ```
 
 ![Image 1: MLOps Pipeline Dashboard Screenshot](images/Dashboard_MLOps.png)
+
 *Real-time monitoring dashboard showing model performance, API metrics, and system health indicators*
 
 ## Reproducibility - Quick Start
@@ -135,7 +136,7 @@ data/raw/
 
 | Metric | Value | Business Rationale |
 |--------|-------|-------------------|
-| **AUC** | 0.784 | Strong discrimination (exceeds 0.75 baseline) |
+| **AUC** | 0.7943 | Strong discrimination (exceeds 0.75 baseline) |
 | **Precision** | 24.5% | Acceptable false alarm rate for maintenance teams |
 | **Recall** | 63.4% | Captures majority of actual failures |
 | **False Alarm Rate** | 10.9% | Manageable workload increase |
@@ -210,8 +211,7 @@ predictive-maintenance-mlop_waltmart/
 │   ├── pipeline_definition.py     # Kubeflow pipeline components
 │   ├── deployment_config.py       # Cloud endpoint configuration
 │   ├── monitoring_setup.py        # Data drift detection
-│   ├── local_simulation.py        # Cloud validation script
-│   └── migration_strategy.md      # Implementation roadmap
+│   ├── local_simulation.py        # Cloud validation script   
 │
 ├── .gitignore
 ├── .dockerignore
