@@ -41,7 +41,7 @@ This repository implements an MLOps solution for predicting machine failures usi
 - ✅ **Cloud Architecture**: Vertex AI components with local validation
 - ✅ **Engineering Practices**: Automated testing, CI/CD, and documentation
 - ✅ **Model Management**: Automated versioning, performance tracking, rollback capability
-- ✅ **Technical Analysis**: Model performance and system design (see `docs/technical_report.md`)
+- ✅ **Technical Analysis**: Model performance and system design (see `docs/Technical_Design_Document.pdf`)
 **Quick Review Guide**: Check diagrams below → Run `make pipeline` → Review `docs/` for detailed analysis
 
 ## System Architecture
@@ -347,9 +347,9 @@ GET  /metrics    # Prometheus metrics
 ## Documentation Structure
 
 ### Technical Documentation
-- **[Technical Design Document](docs/technical_design.pdf)**: System architecture, component design, and technology decisions
-- **[Technical Report](docs/technical_report.pdf)**: Model performance analysis, results evaluation, and lessons learned
-- **[Deployment Guide](docs/deployment_guide.pdf)**: Production deployment instructions and cloud migration
+- **[Technical Design Document](docs/Technical_Design_Document.pdf)**: System architecture, component design, and technology decisions
+- **[Technical Report](docs/Short_Technical_Report.pdf)**: Model performance analysis, results evaluation, and lessons learned
+- **[Deployment Demo](docs/Deployment_Demo.pdf)**: Production deployment instructions and cloud migration
 
 ### Interactive Documentation
 - **[API Documentation](http://localhost:8000/docs)**: Interactive Swagger documentation
